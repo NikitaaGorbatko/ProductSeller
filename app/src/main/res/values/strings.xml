@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ProductSeller</string>
+
+    <string name="products">Продукты</string>
+    <string name="clients">Клиенты</string>
+    <string name="orders">Заказы</string>
+    <string name="title_activity_main2">MainActivity</string>
+
+
+</resources>
