@@ -1,15 +1,12 @@
-package nikitagorbatko.example.productseller
+package nikitagorbatko.example.productseller.products
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import nikitagorbatko.example.productseller.Product
 
-class FragmentProducts: Fragment() {
-    val products = mutableListOf(
+class FragmentProductsVM: ViewModel() {
+    private val productsLiveData = MutableLiveData<MutableList<Product>>()
+    private val products = mutableListOf<Product>(
         Product("Цельное молоко", 110, 1500, true),
         Product("Сливки", 240, 450, true),
         Product("Творог обезжиренный", 240, 1000, false),
@@ -34,19 +31,10 @@ class FragmentProducts: Fragment() {
         Product("Цветки иван-чая", 150, 100, false),
         Product("Таволга", 150, 100, false)
     )
-    val TAG = "FPT"
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val a = inflater.inflate(R.layout.fragment_products, container, false)
-        a?.findViewById<RecyclerView>(R.id.recycler_products)?.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = ProductAdapter(products)
-        }
-
-        return a
+    init {
+        productsLiveData.postValue(products)
     }
+
+    fun getProducts() = productsLiveData
 }
