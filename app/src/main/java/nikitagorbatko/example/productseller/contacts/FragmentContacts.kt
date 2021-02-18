@@ -1,43 +1,25 @@
 package nikitagorbatko.example.productseller.contacts
 
-import android.annotation.SuppressLint
 import android.content.ContentResolver
-import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import android.widget.ListView
-import android.widget.SimpleCursorAdapter
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.CursorLoader
-import androidx.loader.content.Loader
+import nikitagorbatko.example.productseller.Contact
 import nikitagorbatko.example.productseller.R
 
+
 class FragmentContacts(resolver: ContentResolver): Fragment() {
-//, LoaderManager.LoaderCallbacks<Cursor>
     private val contentResolver = resolver
-    private val searchString: String = ""
-    private val selectionArgs = arrayOf(searchString)
-    private val TO_IDS: IntArray = intArrayOf(android.R.id.text1)
-
-    @SuppressLint("InlinedApi")
-    val PROJECTION: Array<out String> = arrayOf(
-        ContactsContract.Contacts._ID,
-        ContactsContract.Contacts.LOOKUP_KEY,
-        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-    )
-
-    @SuppressLint("InlinedApi")
-    private val SELECTION: String = "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE ?"
-
-    @SuppressLint("InlinedApi")
-    val FROM_COLUMNS: Array<String> = arrayOf(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
-
-    private lateinit var cursorAdapter: SimpleCursorAdapter
+    private val contacts = ArrayList<Contact>()
     lateinit var contactsList: ListView
+    private lateinit var baseInflater: LayoutInflater
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,18 +28,7 @@ class FragmentContacts(resolver: ContentResolver): Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_contacts, container, false)
         contactsList = view.findViewById(R.id.contacts_list_view)
-        //LoaderManager.getInstance(this)
-        //loaderManager.initLoader(0, null, this)
-
-//        cursorAdapter = SimpleCursorAdapter(
-//            context,
-//            R.layout.contacts_list_item,
-//            null,
-//            FROM_COLUMNS, TO_IDS,
-//            0
-//        )
-//        contactsList.adapter = cursorAdapter
-
+        baseInflater = inflater
         val phones = contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             null,
@@ -70,31 +41,38 @@ class FragmentContacts(resolver: ContentResolver): Fragment() {
                 phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
             val phoneNumber =
                 phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+            contacts.add(Contact(name, phoneNumber))
         }
         phones.close()
+
+        contactsList.adapter = ArrayAdapter(requireContext(), R.layout.fragment_contacts, contacts)
         return view
     }
 
-//    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
-//        selectionArgs[0] = "\$mSearchString%"
-//
-//        return CursorLoader(
-//            requireContext(),
-//            ContactsContract.Contacts.CONTENT_URI,
-//            PROJECTION,
-//            SELECTION,
-//            selectionArgs,
-//            null
-//        )
-//    }
-//
-//    override fun onLoaderReset(loader: Loader<Cursor>) {
-//        cursorAdapter.swapCursor(null)
-//    }
-//
-//    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
-//        cursorAdapter.swapCursor(data)
-//        data.toString()
-//    }
+    private class MyAdapter(layoutInflater: LayoutInflater) : BaseAdapter() {
+        private val inflater = layoutInflater
+        // override other abstract methods here
+        override fun getView(position: Int, convertView: View, container: ViewGroup): View {
+            var convertView: View? = convertView
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.list_item, container, false)
+            }
+            (convertView.findViewById<View>(android.R.id.text1) as TextView)
+                .setText(getItem(position))
+            return convertView
+        }
+
+        override fun getCount(): Int {
+            TODO("Not yet implemented")
+        }
+
+        override fun getItem(position: Int): Any {
+            TODO("Not yet implemented")
+        }
+
+        override fun getItemId(position: Int): Long {
+            TODO("Not yet implemented")
+        }
+    }
 
 }
