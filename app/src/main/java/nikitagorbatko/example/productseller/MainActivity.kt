@@ -18,12 +18,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.coroutineScope
 import nikitagorbatko.example.productseller.contacts.FragmentContacts
 import nikitagorbatko.example.productseller.orders.FragmentOrders
 import nikitagorbatko.example.productseller.products.FragmentProducts
 
 
-class MainActivity : AppCompatActivity(), DownloadFileManager.DownloadFileListener {
+class MainActivity : AppCompatActivity(){
 
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var products: String
@@ -75,25 +76,9 @@ class MainActivity : AppCompatActivity(), DownloadFileManager.DownloadFileListen
 
 
         setFragment(FragmentProducts(), products)
-
-        val manager = DownloadFileManager()
-        manager.start(File("","hello", ".txt", ""), baseContext)
-        manager.addListener(this)
     }
 
-    override fun onNext(bytesDownloaded: Int, fileKey: String, downloadedFileId: Long?) {
-        TODO("Not yet implemented")
-    }
 
-    override fun onComplete(
-        downloadedFileId: Long,
-        fileKey: String,
-        file: File?,
-        error: Throwable?,
-        isSuccess: Boolean
-    ) {
-        TODO("Not yet implemented")
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -53,12 +53,13 @@ class FragmentContacts(resolver: ContentResolver): Fragment() {
         private val inflater = layoutInflater
         // override other abstract methods here
         override fun getView(position: Int, convertView: View, container: ViewGroup): View {
-            var convertView: View? = convertView
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_item, container, false)
-            }
-            (convertView.findViewById<View>(android.R.id.text1) as TextView)
-                .setText(getItem(position))
+//            var convertView: View? = convertView
+//            if (convertView == null) {
+//                convertView = inflater.inflate(R.layout.list_item, container, false)
+//            }
+//            (convertView.findViewById<View>(android.R.id.text1) as TextView)
+//                .setText(getItem(position))
+//            return convertView
             return convertView
         }
 

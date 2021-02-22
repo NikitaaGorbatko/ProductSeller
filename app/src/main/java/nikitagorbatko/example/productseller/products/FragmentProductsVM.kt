@@ -1,10 +1,18 @@
 package nikitagorbatko.example.productseller.products
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import nikitagorbatko.example.productseller.DownloadFileManager
+import nikitagorbatko.example.productseller.File
 import nikitagorbatko.example.productseller.Product
 
-class FragmentProductsVM: ViewModel() {
+class FragmentProductsVM: ViewModel(), DownloadFileManager.DownloadFileListener {
+    private lateinit var context: Context
     private val productsLiveData = MutableLiveData<MutableList<Product>>()
     private val products = mutableListOf<Product>(
         Product("Цельное молоко", 110, 1500, true),
@@ -34,6 +42,36 @@ class FragmentProductsVM: ViewModel() {
 
     init {
         productsLiveData.postValue(products)
+    }
+
+    fun setContext(context: Context) {this.context = context
+    run()
+    }
+
+    fun run() {
+        viewModelScope.launch {
+            l()
+        }
+    }
+
+    suspend fun l() = withContext(Dispatchers.IO) {
+        val manager = DownloadFileManager()
+        manager.addListener(this@FragmentProductsVM)
+        manager.start(File("http://ovh.net/files/100Mb.dat","100Mb.dat", ".dat", ""), context)
+    }
+
+    override fun onNext(bytesDownloaded: Int, fileKey: String, downloadedFileId: Long?) {
+        val a = 1
+    }
+
+    override fun onComplete(
+        downloadedFileId: Long,
+        fileKey: String,
+        file: File?,
+        error: Throwable?,
+        isSuccess: Boolean
+    ) {
+        val f = 1
     }
 
     fun getProducts() = productsLiveData

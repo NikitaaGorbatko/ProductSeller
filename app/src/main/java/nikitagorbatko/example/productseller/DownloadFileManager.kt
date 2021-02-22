@@ -13,18 +13,16 @@ class DownloadFileManager {
     private var downloadedFileId: Long? = null
     private lateinit var listener: DownloadFileListener
     private lateinit var downloadManager: DownloadManager
-    private var downloading = false
 
     fun start(file: File, context: Context) {
         downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
         //try {
-            downloading = true
             val request = DownloadManager.Request(Uri.parse(file.url)).apply {
                 setTitle(file.fileName)
                 setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.fileExtension))
                 allowScanningByMediaScanner()
-                setVisibleInDownloadsUi(true)
+                //setVisibleInDownloadsUi(true)
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.fileName)
             }
@@ -33,23 +31,22 @@ class DownloadFileManager {
             listener.onNext(fileKey = file.fileKey, downloadedFileId = downloadedFileId)
 
             val query = DownloadManager.Query().apply { setFilterById(downloadedFileId!!) }
-            val cursor = downloadManager.query(query).apply { moveToFirst() }
-            val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+            val cursor = downloadManager.query(query)//.apply { moveToFirst() }
 
-            while (downloading) {
-                val cursorColumnStatus= cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                if (cursor.getInt( == DownloadManager.STATUS_SUCCESSFUL) {
-                    listener.onComplete(downloadedFileId!!, file.fileKey, isSuccess = true)
-                    downloading = false
-                } else {
-                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.PAUSED_UNKNOWN) {
-                        listener.onComplete(file = file, isSuccess = false)
-                        downloading = false
+            while (cursor.moveToNext()) {
+                when(cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+                    DownloadManager.STATUS_SUCCESSFUL -> {
+                        listener.onComplete(downloadedFileId!!, file.fileKey, isSuccess = true)
                     }
-
-                    listener.onNext(bytesDownloaded, file.fileKey, downloadedFileId)
+                    DownloadManager.PAUSED_UNKNOWN -> {
+                        listener.onComplete(file = file, isSuccess = false)
+                    }
+                    else -> {
+                        val bytesDownloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager
+                            .COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                        listener.onNext(bytesDownloaded, file.fileKey, downloadedFileId)
+                    }
                 }
-                cursor.moveToNext()
             }
             cursor.close()
 //        } catch (t: Throwable) {
