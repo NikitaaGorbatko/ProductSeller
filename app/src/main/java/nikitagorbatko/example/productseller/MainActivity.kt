@@ -1,6 +1,8 @@
 package nikitagorbatko.example.productseller
 
 import android.Manifest
+import android.app.DownloadManager
+import android.content.Context
 
 import android.content.Intent
 import android.database.Cursor
@@ -21,7 +23,7 @@ import nikitagorbatko.example.productseller.orders.FragmentOrders
 import nikitagorbatko.example.productseller.products.FragmentProducts
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DownloadFileManager.DownloadFileListener {
 
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var products: String
@@ -39,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        applicationContext.getSystemService(DOWNLOAD_SERVICE)
 
         products = resources.getString(R.string.products)
         clients = resources.getString(R.string.clients)
@@ -71,9 +75,25 @@ class MainActivity : AppCompatActivity() {
 
 
         setFragment(FragmentProducts(), products)
+
+        val manager = DownloadFileManager()
+        manager.start(File("","hello", ".txt", ""), baseContext)
+        manager.addListener(this)
     }
 
+    override fun onNext(bytesDownloaded: Int, fileKey: String, downloadedFileId: Long?) {
+        TODO("Not yet implemented")
+    }
 
+    override fun onComplete(
+        downloadedFileId: Long,
+        fileKey: String,
+        file: File?,
+        error: Throwable?,
+        isSuccess: Boolean
+    ) {
+        TODO("Not yet implemented")
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
