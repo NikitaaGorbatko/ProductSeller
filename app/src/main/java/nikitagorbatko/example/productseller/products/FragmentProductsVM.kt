@@ -57,7 +57,7 @@ class FragmentProductsVM: ViewModel(), DownloadFileManager.DownloadFileListener 
     suspend fun l() = withContext(Dispatchers.IO) {
         val manager = DownloadFileManager()
         manager.addListener(this@FragmentProductsVM)
-        manager.start(File("http://ovh.net/files/100Mb.dat","100Mb.dat", ".dat", ""), context)
+        manager.start(File("https://www.clickdimensions.com/links/TestPDFfile.pdf","TestPDFfile.pdf", ".pdf", ""), context)
     }
 
     override fun onNext(bytesDownloaded: Int, fileKey: String, downloadedFileId: Long?) {
