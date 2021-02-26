@@ -23,10 +23,6 @@ class FragmentProducts: Fragment() {
         viewModel = ViewModelProvider(this, defaultViewModelProviderFactory)
             .get(FragmentProductsVM::class.java)
         observe()
-        context.let {
-            viewModel.setContext(it!!)
-        }
-
 
         val view = inflater.inflate(R.layout.fragment_products, container, false)
         view?.findViewById<RecyclerView>(R.id.recycler_products)?.apply {

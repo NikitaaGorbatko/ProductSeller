@@ -60,10 +60,10 @@ class MainActivity : AppCompatActivity(){
 
         requestPermissions(permissons, REQUEST_RUNTIME_PERMISSION)
 
-
         toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).apply {
             setTitleTextColor(Color.WHITE)
         }
+
         val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity(){
             }
             true
         }
-
 
         setFragment(FragmentProducts(), products)
     }
