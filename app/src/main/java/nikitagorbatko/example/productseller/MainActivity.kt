@@ -1,8 +1,6 @@
 package nikitagorbatko.example.productseller
 
 import android.Manifest
-import android.app.DownloadManager
-import android.content.Context
 
 import android.content.Intent
 import android.database.Cursor
@@ -18,11 +16,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.coroutineScope
 import nikitagorbatko.example.productseller.contacts.FragmentContacts
 import nikitagorbatko.example.productseller.orders.FragmentOrders
 import nikitagorbatko.example.productseller.products.FragmentProducts
-
 
 class MainActivity : AppCompatActivity(){
 
@@ -34,7 +30,8 @@ class MainActivity : AppCompatActivity(){
     private lateinit var fragmentContacts: FragmentContacts
     private val fragmentOrders = FragmentOrders()
     private val REQUEST_RUNTIME_PERMISSION = 123
-    private val permissons = arrayOf(
+
+    private val permissions = arrayOf(
         Manifest.permission.READ_CONTACTS,
         Manifest.permission.WRITE_CONTACTS,
     )
@@ -58,7 +55,7 @@ class MainActivity : AppCompatActivity(){
 
         ActivityResultContracts.RequestPermission()
 
-        requestPermissions(permissons, REQUEST_RUNTIME_PERMISSION)
+        requestPermissions(permissions, REQUEST_RUNTIME_PERMISSION)
 
         toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).apply {
             setTitleTextColor(Color.WHITE)
@@ -76,8 +73,6 @@ class MainActivity : AppCompatActivity(){
 
         setFragment(FragmentProducts(), products)
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -111,21 +106,21 @@ class MainActivity : AppCompatActivity(){
                 }
 
                 // Find Email Addresses
-                val emails: Cursor? = contentResolver.query(
-                    ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,
-                    null,
-                    null
-                )
-                while (emails!!.moveToNext()) {
-                    emailAddress =
-                        emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
-                }
-                emails.close()
+//                val emails: Cursor? = contentResolver.query(
+//                    ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+//                    null,
+//                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + contactId,
+//                    null,
+//                    null
+//                )
+//                while (emails!!.moveToNext()) {
+//                    emailAddress =
+//                        emails.getString(emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA))
+//                }
+//                emails.close()
 
                 //mainActivity.onBackPressed();
-                 Toast.makeText(baseContext, "${phoneNumber.toString()}", Toast.LENGTH_SHORT).show();
+                Toast.makeText(baseContext, "${phoneNumber.toString()}", Toast.LENGTH_SHORT).show();
 //                tvname.setText("Name: $name")
 //                tvphone.setText("Phone: $phoneNumber")
 //                tvmail.setText("Email: $emailAddress")
@@ -134,8 +129,6 @@ class MainActivity : AppCompatActivity(){
             c.close()
         }
     }
-
-
 
     private fun setFragment(fragment: Fragment, titleText: String) {
         title = titleText

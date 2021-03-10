@@ -32,7 +32,8 @@ class FragmentProducts: Fragment() {
 
         return view
     }
-    fun observe() {
+
+    private fun observe() {
         viewModel.getProducts().observe(viewLifecycleOwner, Observer {
             productAdapter.addProducts(it)
         })

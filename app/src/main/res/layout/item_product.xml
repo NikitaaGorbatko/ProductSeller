@@ -23,6 +23,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
+            android:fontFamily=""
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Цельное молоко" />

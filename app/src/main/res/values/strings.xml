@@ -6,5 +6,8 @@
     <string name="orders">Заказы</string>
     <string name="title_activity_main2">MainActivity</string>
 
+    <string name="grams">гр</string>
+    <string name="milliliters">мл</string>
+    <string name="count">1шт</string>
 
 </resources>

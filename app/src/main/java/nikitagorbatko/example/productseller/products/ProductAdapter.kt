@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import nikitagorbatko.example.productseller.Product
 import nikitagorbatko.example.productseller.R
+import nikitagorbatko.example.productseller.Type
 
 class ProductAdapter: RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     private val products = ArrayList<Product>()
@@ -22,7 +23,6 @@ class ProductAdapter: RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_product, parent, false)
@@ -30,10 +30,14 @@ class ProductAdapter: RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val measure = if (products[position].type) "мл" else "гр"
+        val product = products[position]
         holder.name.text = products[position].name
         holder.cost.text = products[position].cost.toString().plus("₽")
-        holder.volume.text = products[position].weight.toString().plus(measure)
+        holder.volume.text = when(product.type) {
+            Type.GRAMS -> product.cost.toString() + "гр"
+            Type.MILLILITERS -> product.cost.toString() + "мл"
+            Type.COUNT -> "1шт"
+        }
     }
 
     override fun getItemCount(): Int = products.size
