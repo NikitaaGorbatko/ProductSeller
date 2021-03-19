@@ -31,11 +31,16 @@ class FragmentProductsVM: ViewModel() {
         Product("Иван-чай", 300, 250, Type.GRAMS),
         Product("Цветки иван-чая", 150, 100, Type.GRAMS),
         Product("Таволга", 150, 100, Type.GRAMS)
+
     )
 
     init {
         productsLiveData.postValue(products)
     }
+    //
+    //
+    //
+    //
 
     fun getProducts() = productsLiveData
 }
